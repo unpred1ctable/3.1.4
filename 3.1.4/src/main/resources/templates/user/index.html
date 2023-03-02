@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+          crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="text-white fs-6 ps-4">
+                    <span class="fw-bold" th:text="${myUser.getUsername()}">#username</span>
+                    with roles: <span th:each="authority : ${myUser.getAuthorities()}"
+                                      th:text="${' ' + authority.getAuthority().toString().replaceAll('ROLE_', '')}">#roles</span>
+                </div>
+                <div>
+                    <form th:action="@{/logout}" th:method="POST">
+                        <input class="btn btn-dark text-secondary" type="submit" value="Logout"/>
+                    </form>
+                </div>
+            </nav>
+        </div>
+        <div class="row vh-100">
+            <div class="col-2">
+                <div class="row">
+                    <nav class="nav flex-column nav-pills">
+                        <a class="nav-link" href="/admin" sec:authorize="hasRole('ADMIN')">Admin</a>
+                        <a class="nav-link active" href="/user">User</a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="col-10 bg-light">
+                <h1>User information page</h1>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">About user</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">First name</th>
+                                <th scope="col">Last name</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Roles</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row" th:text="${myUser.getId()}"></th>
+                                <td th:text="${myUser.getUsername()}"></td>
+                                <td th:text="${myUser.getFirstName()}"></td>
+                                <td th:text="${myUser.getLastName()}"></td>
+                                <td th:text="${myUser.getAge()}"></td>
+                                <td th:text="${myUser.getEmail()}"></td>
+                                <td>
+                                    <th:block th:each="authority : ${myUser.getAuthorities()}"
+                                              th:text="${' ' + authority.getAuthority().toString().replaceAll('ROLE_', '')}">
+                                    </th:block>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
+</body>
+</html>
